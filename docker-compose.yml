@@ -16,6 +16,22 @@ services:
       timeout: 5s
       retries: 5
 
+  warehouse_db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: warehouse_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5435:5432"
+    volumes:
+      - warehouse_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   airflow_db:
     image: postgres:17
     environment:
@@ -42,7 +58,7 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
-      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres]"
       _AIRFLOW_DB_MIGRATE: "true"
       _AIRFLOW_WWW_USER_CREATE: "true"
       _AIRFLOW_WWW_USER_USERNAME: "admin"
@@ -54,6 +70,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./extractor:/opt/airflow/extractor
+      - ./dlt_project:/opt/airflow/dlt_project
       - ./logs:/opt/airflow/logs
     entrypoint: /bin/bash
     command:
@@ -63,16 +80,20 @@ services:
   airflow-webserver:
     image: apache/airflow:2.9.0
     depends_on:
+      airflow_db:
+        condition: service_healthy
       airflow-init:
         condition: service_completed_successfully
       lake_db:
+        condition: service_healthy
+      warehouse_db:
         condition: service_healthy
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
-      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres]"
       ERP_API_KEY: ${ERP_API_KEY}
       ERP_BASE_URL: ${ERP_BASE_URL}
       LAKE_DB_HOST: lake_db
@@ -80,9 +101,15 @@ services:
       LAKE_DB_NAME: lake
       LAKE_DB_USER: postgres
       LAKE_DB_PASSWORD: postgres123
+      WAREHOUSE_DB_HOST: warehouse_db
+      WAREHOUSE_DB_PORT: "5432"
+      WAREHOUSE_DB_NAME: warehouse_db
+      WAREHOUSE_DB_USER: postgres
+      WAREHOUSE_DB_PASSWORD: postgres123
     volumes:
       - ./dags:/opt/airflow/dags
       - ./extractor:/opt/airflow/extractor
+      - ./dlt_project:/opt/airflow/dlt_project
       - ./logs:/opt/airflow/logs
     ports:
       - "8080:8080"
@@ -91,16 +118,20 @@ services:
   airflow-scheduler:
     image: apache/airflow:2.9.0
     depends_on:
+      airflow_db:
+        condition: service_healthy
       airflow-init:
         condition: service_completed_successfully
       lake_db:
+        condition: service_healthy
+      warehouse_db:
         condition: service_healthy
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
-      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres]"
       ERP_API_KEY: ${ERP_API_KEY}
       ERP_BASE_URL: ${ERP_BASE_URL}
       LAKE_DB_HOST: lake_db
@@ -108,12 +139,19 @@ services:
       LAKE_DB_NAME: lake
       LAKE_DB_USER: postgres
       LAKE_DB_PASSWORD: postgres123
+      WAREHOUSE_DB_HOST: warehouse_db
+      WAREHOUSE_DB_PORT: "5432"
+      WAREHOUSE_DB_NAME: warehouse_db
+      WAREHOUSE_DB_USER: postgres
+      WAREHOUSE_DB_PASSWORD: postgres123
     volumes:
       - ./dags:/opt/airflow/dags
       - ./extractor:/opt/airflow/extractor
+      - ./dlt_project:/opt/airflow/dlt_project
       - ./logs:/opt/airflow/logs
     command: scheduler
 
 volumes:
   lake_data:
+  warehouse_data:
   airflow_db_data:
