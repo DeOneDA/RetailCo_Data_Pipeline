@@ -1,0 +1,119 @@
+services:
+
+  lake_db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: lake
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5433:5432"
+    volumes:
+      - lake_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  airflow_db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    ports:
+      - "5434:5432"
+    volumes:
+      - airflow_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  airflow-init:
+    image: apache/airflow:2.9.0
+    depends_on:
+      airflow_db:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests"
+      _AIRFLOW_DB_MIGRATE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: "admin"
+      _AIRFLOW_WWW_USER_PASSWORD: "admin"
+      _AIRFLOW_WWW_USER_FIRSTNAME: "Admin"
+      _AIRFLOW_WWW_USER_LASTNAME: "User"
+      _AIRFLOW_WWW_USER_EMAIL: "admin@example.com"
+      _AIRFLOW_WWW_USER_ROLE: "Admin"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./extractor:/opt/airflow/extractor
+      - ./logs:/opt/airflow/logs
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - airflow db migrate && airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || true
+
+  airflow-webserver:
+    image: apache/airflow:2.9.0
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+      lake_db:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests"
+      ERP_API_KEY: ${ERP_API_KEY}
+      ERP_BASE_URL: ${ERP_BASE_URL}
+      LAKE_DB_HOST: lake_db
+      LAKE_DB_PORT: "5432"
+      LAKE_DB_NAME: lake
+      LAKE_DB_USER: postgres
+      LAKE_DB_PASSWORD: postgres123
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./extractor:/opt/airflow/extractor
+      - ./logs:/opt/airflow/logs
+    ports:
+      - "8080:8080"
+    command: webserver
+
+  airflow-scheduler:
+    image: apache/airflow:2.9.0
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+      lake_db:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests"
+      ERP_API_KEY: ${ERP_API_KEY}
+      ERP_BASE_URL: ${ERP_BASE_URL}
+      LAKE_DB_HOST: lake_db
+      LAKE_DB_PORT: "5432"
+      LAKE_DB_NAME: lake
+      LAKE_DB_USER: postgres
+      LAKE_DB_PASSWORD: postgres123
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./extractor:/opt/airflow/extractor
+      - ./logs:/opt/airflow/logs
+    command: scheduler
+
+volumes:
+  lake_data:
+  airflow_db_data:
