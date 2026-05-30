@@ -4,7 +4,7 @@ load_dotenv()
 
 import dlt
 
-from config import (
+from dlt_project.config import (
     WAREHOUSE_DB_HOST,
     WAREHOUSE_DB_PORT,
     WAREHOUSE_DB_NAME,
@@ -13,7 +13,7 @@ from config import (
     raw_schema,
 )
 
-from sources.lake_source import lake_source
+from dlt_project.sources.lake_source import lake_source
 
 
 def get_warehouse_credentials():
