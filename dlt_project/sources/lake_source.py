@@ -6,7 +6,7 @@ import dlt
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from config import (
+from dlt_project.config import (
     LAKE_DB_HOST,
     LAKE_DB_PORT,
     LAKE_DB_NAME,
