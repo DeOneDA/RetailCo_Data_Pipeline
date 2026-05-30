@@ -8,6 +8,7 @@ sys.path.insert(0, "/opt/airflow")
 
 from extractor.extract import extract_entity
 from extractor.db import setup_schema
+from dlt_project.pipeline import run_pipeline
 
 default_args = {
     "owner": "data-team",
@@ -18,12 +19,12 @@ default_args = {
 
 with DAG(
     dag_id="erp_extract_dag",
-    description="Daily extraction from ERP API into lake PostgreSQL",
+    description="Daily extraction from ERP API into lake PostgreSQL and dlt load to warehouse",
     default_args=default_args,
     start_date=datetime(2024, 1, 1),
     schedule_interval="@daily",
     catchup=False,
-    tags=["extraction", "lake", "erp"],
+    tags=["extraction", "lake", "erp", "dlt", "warehouse"],
 ) as dag:
 
     setup_task = PythonOperator(
@@ -85,7 +86,10 @@ with DAG(
         op_kwargs={"entity_name": "inventory_movements"},
     )
 
-    # --- DEPENDENCIES ---
+    load_dlt_to_warehouse = PythonOperator(
+        task_id="load_dlt_to_warehouse",
+        python_callable=run_pipeline,
+    )
 
     setup_task >> [
         extract_payment_methods,
@@ -99,3 +103,10 @@ with DAG(
     extract_orders >> [extract_order_items, extract_payments]
 
     [extract_products, extract_stores] >> extract_inventory
+
+    [
+        extract_payment_methods,
+        extract_order_items,
+        extract_payments,
+        extract_inventory,
+    ] >> load_dlt_to_warehouse
