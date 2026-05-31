@@ -5,7 +5,7 @@ from extractor.api_client import fetch_all_pages
 from extractor.config import ENTITIES
 
 
-# payment-methods uses hyphen in URL but we store it as payment_methods
+
 # This maps the entity name to its table name
 ENTITY_TABLE_NAMES = {
     "customers":            "customers",
