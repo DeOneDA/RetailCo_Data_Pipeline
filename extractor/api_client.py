@@ -60,6 +60,7 @@ def make_request(endpoint: str, params: dict = None):
     raise Exception(f" Failed to fetch {url} after {MAX_RETRIES} attempts.")
 
 
+
 NO_PAGINATION_ENDPOINTS = ["payment_methods"]
 
 
@@ -86,21 +87,23 @@ def fetch_all_pages(endpoint: str, updated_after=None):
         rows = response.get("data", [])
         all_rows.extend(rows)
 
-        print(f"   Got {len(rows)} rows (total so far: {len(all_rows)})")
+        print(f"  ✅ Got {len(rows)} rows (total so far: {len(all_rows)})")
 
         if endpoint in NO_PAGINATION_ENDPOINTS:
             print(f"  🏁 No pagination for {endpoint}. Done.")
             break
 
-        has_more = response.get("has_more", False)
+        # FIXED: pagination info is inside meta object
+        meta = response.get("meta", {})
+        has_more = meta.get("has_more", False)
 
         if not has_more:
             print(f"  🏁 No more pages for {endpoint}.")
             break
 
-        cursor = response.get("next_cursor")
+        cursor = meta.get("cursor")
         if not cursor:
-            print(f"   has_more is true but no cursor returned. Stopping.")
+            print(f"    has_more is true but no cursor returned. Stopping.")
             break
 
         page_number += 1
