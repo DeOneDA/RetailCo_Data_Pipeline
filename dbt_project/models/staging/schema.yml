@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: stg_customer
+    description: "Staged customers from raw ERP data"
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: email
+        tests: [not_null]
+      - name: is_deleted
+        tests: [not_null]
+
+  - name: stg_orders
+    description: "Staged orders from raw ERP data"
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests: [not_null]
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['pending', 'paid', 'shipped', 'delivered', 'cancelled']
+
+  - name: stg_order_items
+    description: "Staged order line items"
+    columns:
+      - name: order_item_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests: [not_null]
+      - name: product_id
+        tests: [not_null]
+      - name: quantity
+        tests: [not_null]
+      - name: line_total
+        tests: [not_null]
+
+  - name: stg_products
+    description: "Staged products from raw ERP data"
+    columns:
+      - name: product_id
+        tests: [not_null, unique]
+      - name: product_name
+        tests: [not_null]
+      - name: is_deleted
+        tests: [not_null]
+
+  - name: stg_payments
+    description: "Staged payments from raw ERP data"
+    columns:
+      - name: payment_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests: [not_null]
+      - name: amount_paid
+        tests: [not_null]
+
+  - name: stg_payment_methods
+    description: "Staged payment methods"
+    columns:
+      - name: payment_method_id
+        tests: [not_null, unique]
+
+  - name: stg_stores
+    description: "Staged stores"
+    columns:
+      - name: store_id
+        tests: [not_null, unique]
+      - name: store_name
+        tests: [not_null]
+
+  - name: stg_employees
+    description: "Staged employees"
+    columns:
+      - name: employee_id
+        tests: [not_null, unique]
+      - name: is_deleted
+        tests: [not_null]
+
+  - name: stg_inventory_movements
+    description: "Staged inventory movements"
+    columns:
+      - name: movement_id
+        tests: [not_null, unique]
+      - name: product_id
+        tests: [not_null]
+      - name: store_id
+        tests: [not_null]
+      - name: quantity
+        tests: [not_null]

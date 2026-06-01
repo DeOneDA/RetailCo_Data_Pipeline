@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: raw
+    database: warehouse
+    schema: raw
+    tables:
+      - name: customers
+      - name: orders
+      - name: order_items
+      - name: products
+      - name: payments
+      - name: payment_methods
+      - name: stores
+      - name: employees
+      - name: inventory_movements
