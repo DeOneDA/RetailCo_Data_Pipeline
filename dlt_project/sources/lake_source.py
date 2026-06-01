@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -36,7 +37,7 @@ def create_table_resource(table_name: str):
     def table_resource(
         updated_at=dlt.sources.incremental(
             "updated_at",
-            initial_value="1900-01-01T00:00:00",
+            initial_value=datetime(1900, 1, 1),
         )
     ):
         conn = get_lake_connection()
