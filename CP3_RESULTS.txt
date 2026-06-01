@@ -1,0 +1,26 @@
+Lake Database Counts
+
+payment_methods = 5
+stores = 4
+employees = 50
+products = 2000
+customers = 5000
+payments = 71995
+orders = 80000
+order_items = 359920
+inventory_movements = 354139
+watermarks = 9
+
+dlt Pipeline Status
+
+Pipeline retailco_lake_to_warehouse completed successfully
+Load package loaded successfully
+No failed jobs
+
+Warehouse Verification
+
+products = 2000
+customers = 5000
+order_items = 359920
+
+All warehouse counts matched lake counts.
