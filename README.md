@@ -161,11 +161,11 @@ RetailCo_Data_Pipeline/
 ## How To Query The Ware House
 Our analytical architecture exposes the transformed Star-Schema models directly on local machine port 5432. You can connect to our data marts using any popular relational database GUI client (such as DBeaver, pgAdmin, or the VSCode PostgreSQL extension) with our team's customized connection details:
 
-Host: localhost
-Port: 5432
-Database: warehouse_db
-Username: postgres
-Password: postgres123
+- Host: localhost
+- Port: 5432
+- Database: warehouse_db
+- Username: postgres
+- Password: postgres123
 
 ## Final Test:
 Once you get your warehouse_db=# terminal prompt, you can check that our pipeline has populated everything correctly by running these verification statements (remember to type q to close long data tables):
