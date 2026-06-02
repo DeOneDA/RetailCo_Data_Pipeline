@@ -120,7 +120,7 @@ RetailCo_Data_Pipeline/
 ## Setup Instructions:
 1. **Clone The Repository:**
    ```bash
-   git clone (https://github.com/DeOneDA/RetailCo_Data_Pipeline/)
+   git clone [(https://github.com/DeOneDA/RetailCo_Data_Pipeline/)](https://github.com/DeOneDA/RetailCo_Data_Pipeline/tree/main)
    cd RetailCo_Data_Pipeline
    ```
 2. **Configure Environment Variables:**
