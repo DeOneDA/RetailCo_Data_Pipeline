@@ -7,7 +7,7 @@ with snapshot_data as (
 final as (
     select
         -- surrogate key using md5 hash for stability
-        md5(customer_id || '|' || cast(dbt_valid_from as varchar))  as customer_key,
+        md5(coalesce(customer_id, '') || '|' || coalesce(cast(dbt_valid_from as varchar), '')) as customer_key,
         customer_id,
         first_name,
         last_name,
