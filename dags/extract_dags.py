@@ -9,7 +9,10 @@ sys.path.insert(0, "/opt/airflow")
 
 from extractor.extract import extract_entity
 from extractor.db import setup_schema
-from dlt_project.pipeline import run_pipeline
+
+def run_dlt_pipeline():
+    from dlt_project.pipeline import run_pipeline
+    run_pipeline()
 
 
 default_args = {
@@ -92,9 +95,9 @@ with DAG(
 
     load_dlt_to_warehouse = PythonOperator(
         task_id="load_dlt_to_warehouse",
-        python_callable=run_pipeline,
+        python_callable=run_dlt_pipeline,
     )
-
+    
     dbt_snapshot = BashOperator(
         task_id="dbt_snapshot",
         bash_command="cd /opt/airflow/dbt_project && dbt snapshot --profiles-dir /opt/airflow/dbt_project",
