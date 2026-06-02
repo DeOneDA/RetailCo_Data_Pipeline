@@ -6,7 +6,7 @@ with staged as (
 
 final as (
     select
-        md5(store_id)   as store_key,
+        md5(coalesce(store_id, '')) as store_key,
         store_id,
         store_name,
         address,

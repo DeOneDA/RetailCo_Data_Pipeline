@@ -6,7 +6,7 @@ with staged as (
 
 final as (
     select
-        md5(employee_id)    as employee_key,
+        md5(coalesce(employee_id, '')) as employee_key,
         employee_id,
         employee_name,
         role,

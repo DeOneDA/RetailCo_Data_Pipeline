@@ -7,7 +7,7 @@ with snapshot_data as (
 final as (
     select
         -- surrogate key
-        md5(product_id || '|' || cast(dbt_valid_from as varchar))   as product_key,
+       md5(coalesce(product_id, '') || '|' || coalesce(cast(dbt_valid_from as varchar), '')) as product_key,
         product_id,
         product_name,
         sku,

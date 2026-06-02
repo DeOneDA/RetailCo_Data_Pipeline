@@ -6,7 +6,7 @@ with staged as (
 
 final as (
     select
-        md5(payment_method_id)  as payment_method_key,
+        md5(coalesce(payment_method_id, ''))  as payment_method_key,
         payment_method_id,
         method_name,
         provider,
