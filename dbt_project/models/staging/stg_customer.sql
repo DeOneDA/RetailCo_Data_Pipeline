@@ -6,7 +6,7 @@ with source as (
 
 staged as (
     select
-        cast(customer_id as varchar)        as customer_id,
+        cast(id as varchar)                 as customer_id,
         cast(first_name as varchar)         as first_name,
         cast(last_name as varchar)          as last_name,
         cast(address as varchar)            as address,

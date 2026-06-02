@@ -22,8 +22,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              arguments:
-                values: ['pending', 'paid', 'shipped', 'delivered', 'cancelled']
+              values: ['pending', 'paid', 'shipped', 'delivered', 'cancelled']
 
   - name: stg_order_items
     description: "Staged order line items"
