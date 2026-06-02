@@ -71,6 +71,7 @@ services:
       - ./dags:/opt/airflow/dags
       - ./extractor:/opt/airflow/extractor
       - ./dlt_project:/opt/airflow/dlt_project
+      - ./dbt_project:/opt/airflow/dbt_project
       - ./logs:/opt/airflow/logs
     entrypoint: /bin/bash
     command:
@@ -110,6 +111,7 @@ services:
       - ./dags:/opt/airflow/dags
       - ./extractor:/opt/airflow/extractor
       - ./dlt_project:/opt/airflow/dlt_project
+      - ./dbt_project:/opt/airflow/dbt_project
       - ./logs:/opt/airflow/logs
     ports:
       - "8080:8080"
