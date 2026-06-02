@@ -1,22 +1,97 @@
 # RetailCo_Data_Pipeline.
+
 End-to-end modern data pipeline for RetailCo, a Nigerian Retail Chain with stores in Lagos, Abuja, Port Harcourt, and Kano.                                        
 Tools: Apache Airflow, PostgreSQL, dbt, dlt, Docker, and Kimball dimensional modelling.
 
 # Architecture
-(to be filled)
+
+ERP API (9 Entity Endpoints)
+        │
+        │ HTTPS
+        ▼
+Python Extractor
+        │
+        ▼
+PostgreSQL Data Lake (lake_db)
+     (raw schema)
+        │
+        │ dlt Pipeline
+        ▼
+PostgreSQL Warehouse (warehouse_db)
+      (raw schema)
+        │
+        ▼
+dbt staging
+ (cleaning & type casting)
+        │
+        ▼
+dbt snapshots
+ (SCD Type 2 tracking)
+        │
+        ▼
+dbt marts
+(6 Dimensions + 4 Facts +
+ Flagged Payments)
+        │
+        ▼
+dbt tests
+(data quality validation)
+
+───────────────────────────────────
+
+Apache Airflow DAG
+(@daily schedule)
+
+Extract
+   ↓
+Load (dlt)
+   ↓
+dbt snapshot
+   ↓
+dbt staging
+   ↓
+dbt marts
+   ↓
+dbt test
+
+───────────────────────────────────
+
+Docker Compose Environment
+
+├── Airflow Container
+├── Python Extractor Container
+├── PostgreSQL Lake Container
+├── PostgreSQL Warehouse Container
+├── dlt Service
+└── dbt Service
 
 # Prerequisites
+
 (to be filled) 
 
-# Stack 
-## Team Members and Their Responsibilities:
-| Slack ID | Full Name | Role, Contribution & Responsibility |
-| De One | Oluwadamilare Deboh-Ajiga | 
-| God's Favourite_DA | 
-| Taliat | Taliat Samuel Oladimeji
-| Diane | 
+## Required Tools
+
+| Layer | Tool | Version Requirement |
+|---------|---------|---------|
+| Orchestration | Apache Airflow | 2.9+ |
+| Extraction | Python (Hand-written Extractor) | 3.11+ |
+| Lake Storage | PostgreSQL | 15+ |
+| Loading | dlt | Latest |
+| Warehouse Storage | PostgreSQL | 15+ |
+| Transformation | dbt-core + dbt-postgres | 1.7+ |
+| Containerization | Docker + Docker Compose | Latest Stable |
+
+## Team Members and Responsibilities
+
+| Slack ID | Full Name | Role & Responsibilities |
+|-----------|-----------|-----------|
+| De One | Oluwadamilare Deboh-Ajiga | Team Lead; designed the Architecture Diagram, Warehouse ERD, and Kimball Bus Matrix. |
+| God's Favourite_DA | Ogbonna Favour Amarachi | Developed the data extraction process and completed Checkpoint 2; contributed to the Business Insights Document. |
+| Taliat | Taliat Samuel Oladimeji | Completed Checkpoint 3 and assisted with Checkpoints 4 and 5. |
+| Diane | Halimat Abu | Completed Checkpoint 4 and refined the project README documentation. |
 
 ## Project Structure:
+
 RetailCo_Data_Pipeline/
 |- airflow/dags/
 |- dbt_project/
