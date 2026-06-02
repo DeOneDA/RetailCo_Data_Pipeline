@@ -4,7 +4,6 @@ Tools: Apache Airflow, PostgreSQL, dbt, dlt, Docker, and Kimball dimensional mod
 
 # Architecture 
 # Prerequisites 
-# Setup
 ## Team Members and Their Responsibilities:
 | Slack ID | Full Name | Role, Contribution & Responsibility |
 | De One | Oluwadamilare Deboh-Ajiga | 
