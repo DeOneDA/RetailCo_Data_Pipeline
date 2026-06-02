@@ -164,8 +164,8 @@ Our analytical architecture exposes the transformed Star-Schema models directly 
 Host: localhost
 Port: 5432
 Database: warehouse_db
-Username: airflow
-Password: airflow
+Username: postgres
+Password: postgres123
 
 ## Final Test:
 Once you get your warehouse_db=# terminal prompt, you can check that our pipeline has populated everything correctly by running these verification statements (remember to type q to close long data tables):
