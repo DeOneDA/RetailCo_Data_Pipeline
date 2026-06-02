@@ -1,5 +1,6 @@
 # RetailCo_Data_Pipeline.
-This is a modern end-to-end modern data pipeline for RetailCo - a Nigerian Retail Chain, using tools like Apache Airflow, PostgreSQL, dbt, dlt, Docker, and Kimball dimensional modelling.
+End-to-end modern data pipeline for RetailCo - a Nigerian Retail Chain with stores in Lagos,Abuja,Port Harcourt,and Kano.
+Tools: Apache Airflow, PostgreSQL, dbt, dlt, Docker, and Kimball dimensional modelling.
 
 ## Team Members and Their Responsibilities:
 | Slack ID | Full Name | Role, Contribution & Responsibility |
