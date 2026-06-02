@@ -66,30 +66,26 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_date')
-                field: date_key
+              to: ref('dim_date')
+              field: date_key
       - name: customer_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_customer')
-                field: customer_key
+              to: ref('dim_customer')
+              field: customer_key
       - name: product_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_product')
-                field: product_key
+              to: ref('dim_product')
+              field: product_key
       - name: store_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_store')
-                field: store_key
+              to: ref('dim_store')
+              field: store_key
       - name: line_total
         tests: [not_null]
 
@@ -102,23 +98,20 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_date')
-                field: date_key
+              to: ref('dim_date')
+              field: date_key
       - name: customer_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_customer')
-                field: customer_key
+              to: ref('dim_customer')
+              field: customer_key
       - name: payment_method_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_payment_method')
-                field: payment_method_key
+              to: ref('dim_payment_method')
+              field: payment_method_key
       - name: amount_paid
         tests: [not_null]
 
@@ -131,23 +124,20 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_date')
-                field: date_key
+              to: ref('dim_date')
+              field: date_key
       - name: product_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_product')
-                field: product_key
+              to: ref('dim_product')
+              field: product_key
       - name: store_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_store')
-                field: store_key
+              to: ref('dim_store')
+              field: store_key
 
   - name: fct_order_lifecycle
     description: "Accumulating snapshot — one row per order with status timestamps"
@@ -158,29 +148,25 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_date')
-                field: date_key
+              to: ref('dim_date')
+              field: date_key
       - name: customer_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_customer')
-                field: customer_key
+              to: ref('dim_customer')
+              field: customer_key
       - name: store_key
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_store')
-                field: store_key
+              to: ref('dim_store')
+              field: store_key
       - name: status
         tests:
           - not_null
           - accepted_values:
-              arguments:
-                values: ['pending', 'paid', 'shipped', 'delivered', 'cancelled']
+              values: ['pending', 'paid', 'shipped', 'delivered', 'cancelled']
 
   - name: flagged_payments
     description: "Data quality — anomalous payments isolated here"
