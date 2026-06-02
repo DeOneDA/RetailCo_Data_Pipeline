@@ -58,7 +58,7 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
-      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres]"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres] dbt-core==1.7.19 dbt-postgres==1.7.19"
       _AIRFLOW_DB_MIGRATE: "true"
       _AIRFLOW_WWW_USER_CREATE: "true"
       _AIRFLOW_WWW_USER_USERNAME: "admin"
@@ -93,7 +93,7 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
-      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres]"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres] dbt-core==1.7.19 dbt-postgres==1.7.19"
       ERP_API_KEY: ${ERP_API_KEY}
       ERP_BASE_URL: ${ERP_BASE_URL}
       LAKE_DB_HOST: lake_db
@@ -131,7 +131,7 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__WEBSERVER__SECRET_KEY: "mysecretkey123"
-      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres]"
+      _PIP_ADDITIONAL_REQUIREMENTS: "python-dotenv psycopg2-binary requests dlt[postgres] dbt-core==1.7.19 dbt-postgres==1.7.19"
       ERP_API_KEY: ${ERP_API_KEY}
       ERP_BASE_URL: ${ERP_BASE_URL}
       LAKE_DB_HOST: lake_db
@@ -148,6 +148,7 @@ services:
       - ./dags:/opt/airflow/dags
       - ./extractor:/opt/airflow/extractor
       - ./dlt_project:/opt/airflow/dlt_project
+      - ./dbt_project:/opt/airflow/dbt_project
       - ./logs:/opt/airflow/logs
     command: scheduler
 
