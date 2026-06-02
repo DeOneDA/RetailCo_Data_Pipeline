@@ -3,7 +3,8 @@ End-to-end modern data pipeline for RetailCo - a Nigerian Retail Chain with stor
 Tools: Apache Airflow, PostgreSQL, dbt, dlt, Docker, and Kimball dimensional modelling.
 
 # Architecture 
-
+# Prerequisites 
+# Setup
 ## Team Members and Their Responsibilities:
 | Slack ID | Full Name | Role, Contribution & Responsibility |
 | De One | Oluwadamilare Deboh-Ajiga | 
