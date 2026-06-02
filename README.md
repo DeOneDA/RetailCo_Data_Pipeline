@@ -3,58 +3,58 @@
 End-to-end modern data pipeline for RetailCo, a Nigerian Retail Chain with stores in Lagos, Abuja, Port Harcourt, and Kano.                                        
 Tools: Apache Airflow, PostgreSQL, dbt, dlt, Docker, and Kimball dimensional modelling.
 
-# Architecture
+## Architecture
 
+```text
 ERP API (9 Entity Endpoints)
-        │
-        │ HTTPS
-        ▼
+            │
+            │ HTTPS
+            ▼
 Python Extractor
-        │
-        ▼
+            │
+            ▼
 PostgreSQL Data Lake (lake_db)
-     (raw schema)
-        │
-        │ dlt Pipeline
-        ▼
+         (raw schema)
+            │
+            │ dlt Pipeline
+            ▼
 PostgreSQL Warehouse (warehouse_db)
-      (raw schema)
-        │
-        ▼
+          (raw schema)
+            │
+            ▼
 dbt staging
- (cleaning & type casting)
-        │
-        ▼
+(cleaning & type casting)
+            │
+            ▼
 dbt snapshots
- (SCD Type 2 tracking)
-        │
-        ▼
+(SCD Type 2 tracking)
+            │
+            ▼
 dbt marts
 (6 Dimensions + 4 Facts +
  Flagged Payments)
-        │
-        ▼
+            │
+            ▼
 dbt tests
 (data quality validation)
 
-───────────────────────────────────
+────────────────────────────
 
-Apache Airflow DAG
-(@daily schedule)
+Apache Airflow DAG (@daily)
 
 Extract
-   ↓
+  ↓
 Load (dlt)
-   ↓
+  ↓
 dbt snapshot
-   ↓
+  ↓
 dbt staging
-   ↓
+  ↓
 dbt marts
-   ↓
+  ↓
 dbt test
 
-───────────────────────────────────
+────────────────────────────
 
 Docker Compose Environment
 
@@ -64,9 +64,9 @@ Docker Compose Environment
 ├── PostgreSQL Warehouse Container
 ├── dlt Service
 └── dbt Service
+```
 
 # Prerequisites
-
 (to be filled) 
 
 ## Required Tools
@@ -91,7 +91,7 @@ Docker Compose Environment
 | Diane | Halimat Abu | Completed Checkpoint 4 and refined the project README documentation. |
 
 ## Project Structure:
-
+(Also needs to be worked on as well)
 RetailCo_Data_Pipeline/
 |- airflow/dags/
 |- dbt_project/
