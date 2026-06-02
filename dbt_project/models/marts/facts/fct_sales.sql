@@ -32,21 +32,17 @@ dim_date as (
 
 final as (
     select
-        -- surrogate key
-        md5(oi.order_item_id)                   as sales_key,
+        md5(coalesce(oi.order_item_id, '')) as sales_key,
 
-        -- foreign keys to dimensions
-        dd.date_key                             as date_key,
-        dc.customer_key                         as customer_key,
-        dp.product_key                          as product_key,
-        ds.store_key                            as store_key,
-        de.employee_key                         as employee_key,
+        dd.date_key as date_key,
+        dc.customer_key as customer_key,
+        dp.product_key as product_key,
+        ds.store_key as store_key,
+        de.employee_key as employee_key,
 
-        -- natural keys (for traceability)
         oi.order_id,
         oi.order_item_id,
 
-        -- measures
         oi.quantity,
         oi.unit_price,
         oi.discount_amount,
@@ -65,7 +61,6 @@ final as (
         on o.employee_id = de.employee_id
     left join dim_date dd
         on cast(o.created_at as date) = dd.full_date
-    -- exclude cancelled orders from sales facts
     where o.status != 'cancelled'
 )
 

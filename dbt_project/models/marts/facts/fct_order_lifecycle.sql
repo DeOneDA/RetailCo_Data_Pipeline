@@ -23,49 +23,41 @@ dim_date as (
 
 final as (
     select
-        -- surrogate key
-        md5(o.order_id)                         as order_key,
+        md5(coalesce(o.order_id, '')) as order_key,
 
-        -- foreign keys
-        dd.date_key                             as date_key,
-        dc.customer_key                         as customer_key,
-        ds.store_key                            as store_key,
-        de.employee_key                         as employee_key,
+        dd.date_key as date_key,
+        dc.customer_key as customer_key,
+        ds.store_key as store_key,
+        de.employee_key as employee_key,
 
-        -- natural key
         o.order_id,
-
-        -- current status
         o.status,
 
-        -- accumulating timestamps (fill in as order progresses)
         o.pending_at,
         o.paid_at,
         o.shipped_at,
         o.delivered_at,
         o.cancelled_at,
 
-        -- lag measures (how long between each stage)
         case
             when o.paid_at is not null and o.pending_at is not null
             then extract(epoch from (o.paid_at - o.pending_at))/3600
-        end                                     as hours_pending_to_paid,
+        end as hours_pending_to_paid,
 
         case
             when o.shipped_at is not null and o.paid_at is not null
             then extract(epoch from (o.shipped_at - o.paid_at))/3600
-        end                                     as hours_paid_to_shipped,
+        end as hours_paid_to_shipped,
 
         case
             when o.delivered_at is not null and o.shipped_at is not null
             then extract(epoch from (o.delivered_at - o.shipped_at))/3600
-        end                                     as hours_shipped_to_delivered,
+        end as hours_shipped_to_delivered,
 
-        -- total fulfillment time
         case
             when o.delivered_at is not null and o.pending_at is not null
             then extract(epoch from (o.delivered_at - o.pending_at))/3600
-        end                                     as total_fulfillment_hours
+        end as total_fulfillment_hours
 
     from orders o
     left join dim_customer dc
