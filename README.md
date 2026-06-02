@@ -66,8 +66,13 @@ Docker Compose Environment
 └── dbt Service
 ```
 
-# Prerequisites
-(to be filled) 
+## Prerequisites
+
+- Git
+- Docker Engine
+- Docker Compose
+- Access to the ERP REST API
+- GitHub account
 
 ## Required Tools
 
