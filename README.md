@@ -96,6 +96,7 @@ Docker Compose Environment
 | Diane | Halimat Abu | Completed Checkpoint 4 and refined the project README documentation. |
 
 ## Project Structure:
+```
 RetailCo_Data_Pipeline/
 ├── dags/                  # Apache Airflow core DAG workflows
 │   └── extract_dags.py    # Main orchestration pipeline definition
@@ -114,6 +115,7 @@ RetailCo_Data_Pipeline/
 ├── design/                # Kimball Bus Matrix, Architecture design, and ERDs
 ├── .env.example           # Example workspace environment variables template
 └── docker-compose.yml     # Service manager orchestrating the infrastructure stack
+```
 
 ## Setup Instructions:
 1. **Clone The Repository:**
@@ -149,43 +151,29 @@ RetailCo_Data_Pipeline/
    Note: Ensure Docker Desktop is allocated at least 4GB of RAM to handle parallel task orchestration and connection pipelines without interruption.
 
 ## How To Run The Pipeline
-1. Launch your web browser and navigate to the local portal at http://localhost:8080.
-2. Authenticate using the default admin cluster credentials (username: admin / password: admin).
-3. Locate the extract_dags pipeline inside the DAG console list.
-4. Click the toggle switch to change its status to Unpaused, then click the Trigger DAG (play) icon in the actions column to execute the pipeline.
+1. Launch your web browser and navigate to the local portal at **`http://localhost:8080`**.
+2. Authenticate using our specific admin panel credentials:
+   - **Username:** `admin`
+   - **Password:** `admin`
+3. Locate the `extract_dags` pipeline inside the DAG console list.
+4. Click the toggle switch to change its status to **Unpaused**, then click the **Trigger DAG** (play) icon in the actions column to execute the pipeline.
 
 ## How To Query The Ware House
-The analytical architecture exposes your transformed Star-Schema models on mapped local machine port 5435. You can connect to your data marts using any popular relational database GUI client (such as DBeaver, pgAdmin, or the VSCode PostgreSQL extension) with the connection details below:
+Our analytical architecture exposes the transformed Star-Schema models directly on local machine port 5432. You can connect to our data marts using any popular relational database GUI client (such as DBeaver, pgAdmin, or the VSCode PostgreSQL extension) with our team's customized connection details:
 
 Host: localhost
-
-Port: 5435
-
+Port: 5432
 Database: warehouse_db
+Username: airflow
+Password: airflow
 
-Username: postgres
-
-Password: (Defined inside your root .env or docker-compose.yml file)
-
-## Checkpoint 3: dlt Loader
-
-The dlt loader moves raw data from the lake PostgreSQL database into the warehouse PostgreSQL database.
-
-Source:
-- Database: `lake`
-- Schema: `raw`
-- Tables: customers, products, stores, employees, orders, order_items, payments, inventory_movements, payment_methods
-
-Destination:
-- Database: `warehouse_db`
-- Schema: `raw`
-
-The loader uses `updated_at` for incremental loading and `id` as the primary key for merge loading. This prevents duplicate records when the pipeline is run more than once.
-
-CP3 files:
-- `dlt_project/config.py`
-- `dlt_project/pipeline.py`
-- `dlt_project/sources/lake_source.py`
-- `dlt_project/requirements.txt`
-
-The dlt load is called from the Airflow DAG after all extraction tasks complete.
+## Final Test:
+Once you get your warehouse_db=# terminal prompt, you can check that our pipeline has populated everything correctly by running these verification statements (remember to type q to close long data tables):
+```SQL
+-- 1. Check table availability in the warehouse marts
+\dt
+-- 2. Confirm total volume throughput of loaded orders
+SELECT COUNT(*) FROM fct_orders;
+-- 3. View net revenue distribution across regional retail stores
+SELECT store_location, SUM(net_revenue) FROM fct_orders GROUP BY store_location;
+```
